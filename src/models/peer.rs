@@ -46,7 +46,7 @@ impl Peer {
             listen_port: None,
             private_key,
             dns: interface.dns.clone(),
-            amnezia_settings: None,
+            // amnezia_settings: None,
             endpoint: None,
             peers: vec![interface.as_peer()],
         })

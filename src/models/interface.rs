@@ -11,15 +11,13 @@ pub struct Interface {
     pub listen_port: Option<u16>,
     pub private_key: PrivateKey,
     pub dns: Vec<String>,
-    pub amnezia_settings: Option<AmneziaSettings>,
-
+    // pub amnezia_settings: Option<AmneziaSettings>,
     pub endpoint: Option<String>,
 
     pub peers: Vec<Peer>,
 }
 
 impl Interface {
-
     pub fn as_peer(&self) -> Peer {
         Peer {
             endpoint: self.endpoint.clone(),
@@ -27,8 +25,6 @@ impl Interface {
             key: Either::Left(self.private_key.clone()),
         }
     }
-
-    fn add_peer(&mut self) {}
 }
 
 impl fmt::Display for Interface {

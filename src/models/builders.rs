@@ -121,7 +121,7 @@ impl InterfaceBuilder {
             dns: self.dns,
 
             // TODO: do amnezia support
-            amnezia_settings: None,
+            // amnezia_settings: None,
 
             endpoint: self.endpoint,
             peers: self.peers,
