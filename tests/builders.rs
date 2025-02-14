@@ -1,13 +1,13 @@
-use wireguard_conf::prelude::*;
+use wireguard_conf::{as_ipnet, prelude::*};
+use ipnet::Ipv4Net;
 
 #[test]
 fn builders() {
-    let address = "10.3.2.1/24".parse().unwrap();
+    let address = as_ipnet!("10.3.2.1/24");
 
     let interface = InterfaceBuilder::new()
         .address(address)
         .listen_port(55870)
-
         .set_dns(vec!["8.8.8.8".to_string(), "8.8.4.4".to_string()])
         .add_dns("1.1.1.1".to_string())
         .add_peer(

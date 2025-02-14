@@ -1,8 +1,9 @@
+use either::Either;
 use ipnet::Ipv4Net;
 
-use std::fmt::Write;
+use std::fmt;
 
-use crate::{prelude::*, utils::amnezia::AmneziaSettings};
+use crate::prelude::*;
 
 #[derive(Clone, Debug)]
 pub struct Interface {
@@ -12,27 +13,44 @@ pub struct Interface {
     pub dns: Vec<String>,
     pub amnezia_settings: Option<AmneziaSettings>,
 
+    pub endpoint: Option<String>,
+
     pub peers: Vec<Peer>,
 }
 
 impl Interface {
+
+    pub fn as_peer(&self) -> Peer {
+        Peer {
+            endpoint: self.endpoint.clone(),
+            allowed_ips: vec![self.address],
+            key: Either::Left(self.private_key.clone()),
+        }
+    }
+
     fn add_peer(&mut self) {}
 }
 
-impl ExportConfig for Interface {
-    fn config(&self) -> String {
-        let mut config = String::new();
-
-        writeln!(&mut config, "[Interface]").unwrap();
-        writeln!(&mut config, "Address = {}", self.address).unwrap();
+impl fmt::Display for Interface {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        writeln!(f, "[Interface]")?;
+        if let Some(endpoint) = self.endpoint.clone() {
+            writeln!(f, "# Name = {}", endpoint)?;
+        }
+        writeln!(f, "Address = {}", self.address)?;
         if let Some(listen_port) = self.listen_port {
-            writeln!(&mut config, "ListenPort = {}", listen_port).unwrap();
+            writeln!(f, "ListenPort = {}", listen_port)?;
         }
-        writeln!(&mut config, "PrivateKey = {}", self.private_key).unwrap();
+        writeln!(f, "PrivateKey = {}", self.private_key)?;
         if !self.dns.is_empty() {
-            writeln!(&mut config, "DNS = {}", self.dns.join(",")).unwrap();
+            writeln!(f, "DNS = {}", self.dns.join(","))?;
         }
 
-        config
+        for peer in &self.peers {
+            writeln!(f, "")?;
+            writeln!(f, "{}", peer)?;
+        }
+
+        fmt::Result::Ok(())
     }
 }

@@ -5,6 +5,10 @@ use x25519_dalek::{PublicKey as XPublicKey, StaticSecret};
 
 use crate::WireguardError;
 
+/// Private key
+///
+/// Wrapper around [`x25519_dalek::StaticSecret`]. It can be formatted to Wireguard's
+/// format, and also implements [`fmt::Debug`].
 #[derive(Clone)]
 pub struct PrivateKey {
     secret: StaticSecret,
@@ -32,6 +36,12 @@ impl fmt::Display for PrivateKey {
     }
 }
 
+impl PartialEq for PrivateKey {
+    fn eq(&self, other: &Self) -> bool {
+        self.secret.as_bytes() == other.secret.as_bytes()
+    }
+}
+
 impl TryFrom<String> for PrivateKey {
     type Error = WireguardError;
 
@@ -48,7 +58,11 @@ impl TryFrom<String> for PrivateKey {
     }
 }
 
-#[derive(Clone)]
+/// Public key.
+///
+/// Wrapper around [`x25519_dalek::PublicKey`]. It can be formatted to Wireguard's
+/// format, and also implements [`fmt::Debug`].
+#[derive(Clone, PartialEq)]
 pub struct PublicKey {
     key: XPublicKey,
 }
@@ -58,6 +72,12 @@ impl fmt::Debug for PublicKey {
         f.debug_struct("PublicKey")
             .field("key", &self.to_string())
             .finish()
+    }
+}
+
+impl fmt::Display for PublicKey {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", BASE64_STANDARD.encode(self.key.to_bytes()))
     }
 }
 
@@ -82,11 +102,5 @@ impl From<&PrivateKey> for PublicKey {
         Self {
             key: XPublicKey::from(&value.secret),
         }
-    }
-}
-
-impl ToString for PublicKey {
-    fn to_string(&self) -> String {
-        BASE64_STANDARD.encode(self.key.to_bytes())
     }
 }
