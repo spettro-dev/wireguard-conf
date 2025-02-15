@@ -1,6 +1,7 @@
 name: Release crate
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - '*'
