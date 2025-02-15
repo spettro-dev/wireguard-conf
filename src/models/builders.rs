@@ -27,6 +27,7 @@ use crate::prelude::*;
 /// assert_eq!(interface.dns, vec!["8.8.8.8", "8.8.4.4"]);
 /// assert_eq!(interface.endpoint, Some("vpn.example.com".to_string()));
 /// ```
+#[must_use]
 #[derive(Default)]
 pub struct InterfaceBuilder {
     address: Ipv4Net,
@@ -117,7 +118,7 @@ impl InterfaceBuilder {
         Interface {
             address: self.address,
             listen_port: self.listen_port,
-            private_key: self.private_key.unwrap_or_else(|| PrivateKey::random()),
+            private_key: self.private_key.unwrap_or_else(PrivateKey::random),
             dns: self.dns,
 
             // TODO: do amnezia support
@@ -152,6 +153,7 @@ impl InterfaceBuilder {
 /// assert_eq!(peer.allowed_ips, vec!["10.0.0.2/32".parse().unwrap()]);
 /// assert_eq!(peer.key, Either::Left(client_private_key));
 /// ```
+#[must_use]
 #[derive(Default)]
 pub struct PeerBuilder {
     endpoint: Option<String>,

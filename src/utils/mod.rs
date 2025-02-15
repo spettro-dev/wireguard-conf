@@ -1,13 +1,11 @@
 /// Collection of helper structs for creating [`Interface`]/[`Peer`]
 mod amnezia;
 mod keys;
-mod traits;
 
 use thiserror::Error;
 
 pub use amnezia::*;
 pub use keys::*;
-pub use traits::*;
 
 #[derive(Error, Debug)]
 pub enum WireguardError {
@@ -19,6 +17,9 @@ pub enum WireguardError {
     
     #[error("no private key provided")]
     NoPrivateKeyProvided,
+
+    #[error("no assigned ip")]
+    NoAssignedIP
 }
 
 pub type WireguardResult<T> = Result<T, WireguardError>;

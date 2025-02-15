@@ -8,9 +8,18 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  RUSTFLAGS: "-Dwarnings"
 
 jobs:
-  build:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint using Clippy
+        run: cargo clippy 
+
+  test:
     runs-on: ubuntu-latest
 
     steps:

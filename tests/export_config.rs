@@ -31,7 +31,7 @@ pub fn export_interface() {
 pub fn export_client_interface() {
     let (server_interface, peer) = get_example_data();
 
-    let mut client_interface = peer.as_interface(&server_interface).unwrap();
+    let mut client_interface = peer.to_interface(&server_interface).unwrap();
     client_interface.peers[0].allowed_ips.push(as_ipnet!("0.0.0.0/0"));
     
     let config = client_interface.to_string();

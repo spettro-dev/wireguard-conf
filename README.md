@@ -37,5 +37,5 @@ println!("Server's config:");
 println!("{}\n", interface);
 
 println!("Client's config:");
-println!("{}", peer.as_interface(&interface).unwrap());
+println!("{}", peer.to_interface(&interface).unwrap());
 ```

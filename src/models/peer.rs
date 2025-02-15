@@ -5,6 +5,7 @@ use std::fmt;
 
 use crate::prelude::*;
 
+#[must_use]
 #[derive(Clone, Debug)]
 pub struct Peer {
     /// Peer's endpoint.
@@ -29,17 +30,19 @@ impl Peer {
     ///
     /// - [`WireguardError::NoPrivateKeyProvided`] -- peer don't have private key.
     ///   You need to provide [`PrivateKey`] for creating interfaces from peers.
-    pub fn as_interface(&self, interface: &Interface) -> WireguardResult<Interface> {
+    /// - [`WireguardError::NoAssignedIP`] -- no assigned ip found.
+    ///   This means that your peer doesn't have allowed ip, that is in interface's addresses
+    ///   network.
+    pub fn to_interface(&self, interface: &Interface) -> WireguardResult<Interface> {
         let Either::Left(private_key) = self.key.clone() else {
             return Err(WireguardError::NoPrivateKeyProvided);
         };
 
-        let assigned_ip = self
+        let assigned_ip = *self
             .allowed_ips
             .iter()
             .find(|&net| interface.address.contains(net))
-            .unwrap()
-            .clone();
+            .ok_or(WireguardError::NoAssignedIP)?;
 
         Ok(Interface {
             address: assigned_ip,
@@ -48,7 +51,7 @@ impl Peer {
             dns: interface.dns.clone(),
             // amnezia_settings: None,
             endpoint: None,
-            peers: vec![interface.as_peer()],
+            peers: vec![interface.to_peer()],
         })
     }
 }
@@ -57,14 +60,14 @@ impl fmt::Display for Peer {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         writeln!(f, "[Peer]")?;
         if let Some(endpoint) = self.endpoint.clone() {
-            writeln!(f, "Endpoint = {}", endpoint)?;
+            writeln!(f, "Endpoint = {endpoint}")?;
         }
         writeln!(
             f,
             "AllowedIPs = {}",
             self.allowed_ips
                 .iter()
-                .map(|net| net.to_string())
+                .map(std::string::ToString::to_string)
                 .collect::<Vec<String>>()
                 .join(",")
         )?;
