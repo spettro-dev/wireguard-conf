@@ -1,14 +1,18 @@
 # Wireguard Conf
 
-Easy to use library for managing wireguard configs.
+Easy to use library for creating wireguard configs.
 
 ## Installation
 
+Install `wireguard-conf` and `ipnet` (for parsing ip networks)
+
 ```shell
-...
+cargo add wireguard-conf ipnet
 ```
 
 ### Usage
+
+More usage examples in [tests](tests/) and on [docs.rs](https://docs.rs/wireguard-conf)
 
 ```rust
 use wireguard_conf::prelude::*;
@@ -26,6 +30,8 @@ let interface = InterfaceBuilder::new()
     .address(as_ipnet!("10.0.0.1/24"))
     .add_peer(peer.clone())
     .build();
+
+// to export configs, use `println!()`, `writeln!()`, `.to_string()`, etc.
 
 println!("Server's config:");
 println!("{}\n", interface);

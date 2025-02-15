@@ -21,6 +21,8 @@
 //!     .add_peer(peer.clone())
 //!     .build();
 //!
+//! // to export configs, use `println!()`, `writeln!()`, `.to_string()`, etc.
+//!
 //! println!("Server's config:");
 //! println!("{}\n", interface);
 //!

@@ -1,7 +1,17 @@
 [package]
-name = "wireguard_conf"
+name = "wireguard-conf"
+description = "Construct Wireguard's interface and peer configs"
+keywords = ["wireguard", "amnezia", "builder"]
+
 version = "0.1.0"
 edition = "2021"
+
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/idkncc/wireguard-conf"
+repository = "https://github.com/idkncc/wireguard-conf"
+
+exclude = ["tests/", ".github/", "TODO.md", ".gitignore"]
 
 [dependencies]
 base64 = "0.22.1"
