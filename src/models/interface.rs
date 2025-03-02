@@ -15,6 +15,7 @@ pub struct Interface {
     pub endpoint: Option<String>,
 
     #[cfg(feature = "amneziawg")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "amneziawg")))]
     pub amnezia_settings: Option<AmneziaSettings>,
 
     pub peers: Vec<Peer>,

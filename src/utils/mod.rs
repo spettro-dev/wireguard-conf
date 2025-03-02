@@ -7,6 +7,7 @@ mod keys;
 use thiserror::Error;
 
 #[cfg(feature = "amneziawg")]
+#[cfg_attr(docsrs, doc(cfg(feature = "amneziawg")))]
 pub use amnezia::*;
 pub use keys::*;
 

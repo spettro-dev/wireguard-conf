@@ -38,6 +38,7 @@ pub struct InterfaceBuilder {
     peers: Vec<Peer>,
 
     #[cfg(feature = "amneziawg")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "amneziawg")))]
     amnezia_settings: Option<AmneziaSettings>,
 }
 
@@ -120,6 +121,7 @@ impl InterfaceBuilder {
     ///
     /// [AmneziaWG Docs](https://github.com/amnezia-vpn/amneziawg-linux-kernel-module?tab=readme-ov-file#configuration)
     #[cfg(feature = "amneziawg")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "amneziawg")))]
     pub fn amnezia_settings(mut self, amnezia_settings: AmneziaSettings) -> Self {
         self.amnezia_settings = Some(amnezia_settings);
         self
@@ -173,6 +175,7 @@ pub struct PeerBuilder {
     key: Option<Either<PrivateKey, PublicKey>>,
 
     #[cfg(feature = "amneziawg")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "amneziawg")))]
     amnezia_settings: Option<AmneziaSettings>,
 }
 
@@ -229,7 +232,8 @@ impl PeerBuilder {
     ///
     /// [AmneziaWG Docs](https://github.com/amnezia-vpn/amneziawg-linux-kernel-module?tab=readme-ov-file#configuration)
     #[cfg(feature = "amneziawg")]
-    pub fn set_amnezia_settings(mut self, amnezia_settings: AmneziaSettings) -> Self {
+    #[cfg_attr(docsrs, doc(cfg(feature = "amneziawg")))]
+    pub fn amnezia_settings(mut self, amnezia_settings: AmneziaSettings) -> Self {
         self.amnezia_settings = Some(amnezia_settings);
         self
     }

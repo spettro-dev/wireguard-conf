@@ -21,6 +21,7 @@ pub struct Peer {
     pub key: Either<PrivateKey, PublicKey>,
 
     #[cfg(feature = "amneziawg")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "amneziawg")))]
     pub amnezia_settings: Option<AmneziaSettings>,
 }
 
@@ -62,6 +63,12 @@ impl Peer {
     }
 }
 
+/// Implements [`fmt::Display`] for exporting peer.
+///
+/// # Note
+///
+/// It exports only `[Peer] ...` part. To export full interface, use [`Interface::to_peer()`]
+/// and then [`Peer::to_string()`]
 impl fmt::Display for Peer {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         writeln!(f, "[Peer]")?;

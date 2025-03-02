@@ -24,3 +24,8 @@ thiserror = "2.0.11"
 x25519-dalek = { version = "2.0.1", features = ["static_secrets", "getrandom"] }
 
 rand = { version = "0.9.0", features = ["small_rng"], optional = true }
+
+# Doc all features
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]

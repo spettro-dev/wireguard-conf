@@ -13,9 +13,9 @@ macro_rules! assert_return {
     };
 }
 
-/// Amnezia obfuscation values.
+/// AmneziaWG obfuscation values.
 ///
-/// - [Configuration](https://github.com/amnezia-vpn/amneziawg-linux-kernel-module?tab=readme-ov-file#configuration)
+/// - [Documentation](https://github.com/amnezia-vpn/amneziawg-linux-kernel-module?tab=readme-ov-file#configuration)
 #[derive(Clone, Debug)]
 pub struct AmneziaSettings {
     /// 1 ≤ Jc ≤ 128; recommended range is from 3 to 10 inclusive
@@ -121,7 +121,9 @@ impl AmneziaSettings {
     }
 }
 
+/// Methods
 impl AmneziaSettings {
+    /// Validates [`AmneziaSettings`].
     pub fn validate(&self) -> WireguardResult<()> {
         assert_return!(
             1 <= self.jc && self.jc <= 128,
@@ -159,6 +161,11 @@ impl AmneziaSettings {
     }
 }
 
+/// Implements [`fmt::Display`] for exporting AmneziaWG values.
+///
+/// # Note
+///
+/// It exports only [`Jc = ..., Jmin = ..., etc`]. To export full interface, use [`Interface::to_string()`].
 impl fmt::Display for AmneziaSettings {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         writeln!(f, "Jc = {}", self.jc)?;
