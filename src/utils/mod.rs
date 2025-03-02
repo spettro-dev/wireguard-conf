@@ -1,25 +1,32 @@
 /// Collection of helper structs for creating [`Interface`]/[`Peer`]
+
+#[cfg(feature = "amneziawg")]
 mod amnezia;
 mod keys;
 
 use thiserror::Error;
 
+#[cfg(feature = "amneziawg")]
 pub use amnezia::*;
 pub use keys::*;
 
-#[derive(Error, Debug)]
+#[derive(Error, Debug, PartialEq)]
 pub enum WireguardError {
     #[error("invalid private key")]
     InvalidPrivateKey,
 
     #[error("invalid public key")]
     InvalidPublicKey,
-    
+
     #[error("no private key provided")]
     NoPrivateKeyProvided,
 
     #[error("no assigned ip")]
-    NoAssignedIP
+    NoAssignedIP,
+
+    #[cfg(feature = "amneziawg")]
+    #[error("invalid amnezia setting: {0}")]
+    InvalidAmneziaSetting(String),
 }
 
 pub type WireguardResult<T> = Result<T, WireguardError>;

@@ -12,8 +12,10 @@ pub struct Interface {
     pub listen_port: Option<u16>,
     pub private_key: PrivateKey,
     pub dns: Vec<String>,
-    // pub amnezia_settings: Option<AmneziaSettings>,
     pub endpoint: Option<String>,
+
+    #[cfg(feature = "amneziawg")]
+    pub amnezia_settings: Option<AmneziaSettings>,
 
     pub peers: Vec<Peer>,
 }
@@ -24,6 +26,9 @@ impl Interface {
             endpoint: self.endpoint.clone(),
             allowed_ips: vec![self.address],
             key: Either::Left(self.private_key.clone()),
+
+            #[cfg(feature = "amneziawg")]
+            amnezia_settings: self.amnezia_settings.clone(),
         }
     }
 }
@@ -31,7 +36,7 @@ impl Interface {
 impl fmt::Display for Interface {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         writeln!(f, "[Interface]")?;
-        if let Some(endpoint) = self.endpoint.clone() {
+        if let Some(endpoint) = &self.endpoint {
             writeln!(f, "# Name = {endpoint}")?;
         }
         writeln!(f, "Address = {}", self.address)?;
@@ -41,6 +46,12 @@ impl fmt::Display for Interface {
         writeln!(f, "PrivateKey = {}", self.private_key)?;
         if !self.dns.is_empty() {
             writeln!(f, "DNS = {}", self.dns.join(","))?;
+        }
+
+        #[cfg(feature = "amneziawg")]
+        if let Some(amnezia_settings) = &self.amnezia_settings {
+            writeln!(f)?;
+            writeln!(f, "{}", amnezia_settings)?;
         }
 
         for peer in &self.peers {

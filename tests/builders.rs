@@ -1,5 +1,5 @@
-use wireguard_conf::{as_ipnet, prelude::*};
 use ipnet::Ipv4Net;
+use wireguard_conf::{as_ipnet, prelude::*};
 
 #[test]
 fn builders() {

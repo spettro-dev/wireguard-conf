@@ -32,12 +32,11 @@
 
 #![warn(clippy::pedantic)]
 
+mod macros;
 mod models;
 mod utils;
-mod macros;
 
 pub mod prelude;
 
 pub use models::*;
 pub use utils::*;
-

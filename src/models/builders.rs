@@ -36,6 +36,9 @@ pub struct InterfaceBuilder {
     dns: Vec<String>,
     endpoint: Option<String>,
     peers: Vec<Peer>,
+
+    #[cfg(feature = "amneziawg")]
+    amnezia_settings: Option<AmneziaSettings>,
 }
 
 impl InterfaceBuilder {
@@ -113,6 +116,15 @@ impl InterfaceBuilder {
         self
     }
 
+    /// Sets AmneziaWG obfuscation values.
+    ///
+    /// [AmneziaWG Docs](https://github.com/amnezia-vpn/amneziawg-linux-kernel-module?tab=readme-ov-file#configuration)
+    #[cfg(feature = "amneziawg")]
+    pub fn amnezia_settings(mut self, amnezia_settings: AmneziaSettings) -> Self {
+        self.amnezia_settings = Some(amnezia_settings);
+        self
+    }
+
     /// Creates [`Interface`].
     pub fn build(self) -> Interface {
         Interface {
@@ -121,8 +133,8 @@ impl InterfaceBuilder {
             private_key: self.private_key.unwrap_or_else(PrivateKey::random),
             dns: self.dns,
 
-            // TODO: do amnezia support
-            // amnezia_settings: None,
+            #[cfg(feature = "amneziawg")]
+            amnezia_settings: None,
 
             endpoint: self.endpoint,
             peers: self.peers,
@@ -159,6 +171,9 @@ pub struct PeerBuilder {
     endpoint: Option<String>,
     allowed_ips: Vec<Ipv4Net>,
     key: Option<Either<PrivateKey, PublicKey>>,
+
+    #[cfg(feature = "amneziawg")]
+    amnezia_settings: Option<AmneziaSettings>,
 }
 
 impl PeerBuilder {
@@ -210,6 +225,15 @@ impl PeerBuilder {
         self
     }
 
+    /// Sets AmneziaWG obfuscation values.
+    ///
+    /// [AmneziaWG Docs](https://github.com/amnezia-vpn/amneziawg-linux-kernel-module?tab=readme-ov-file#configuration)
+    #[cfg(feature = "amneziawg")]
+    pub fn set_amnezia_settings(mut self, amnezia_settings: AmneziaSettings) -> Self {
+        self.amnezia_settings = Some(amnezia_settings);
+        self
+    }
+
     /// Creates [`Peer`].
     pub fn build(self) -> Peer {
         let key = self
@@ -220,6 +244,9 @@ impl PeerBuilder {
             endpoint: self.endpoint,
             allowed_ips: self.allowed_ips,
             key,
+
+            #[cfg(feature = "amneziawg")]
+            amnezia_settings: self.amnezia_settings,
         }
     }
 }

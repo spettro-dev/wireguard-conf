@@ -19,6 +19,9 @@ pub struct Peer {
     /// If [`PrivateKey`] is provided, then peer can be exported to interface & full config.
     /// Otherwise only to peer section of config.
     pub key: Either<PrivateKey, PublicKey>,
+
+    #[cfg(feature = "amneziawg")]
+    pub amnezia_settings: Option<AmneziaSettings>,
 }
 
 impl Peer {
@@ -49,7 +52,10 @@ impl Peer {
             listen_port: None,
             private_key,
             dns: interface.dns.clone(),
-            // amnezia_settings: None,
+
+            #[cfg(feature = "amneziawg")]
+            amnezia_settings: self.amnezia_settings.clone(),
+
             endpoint: None,
             peers: vec![interface.to_peer()],
         })
