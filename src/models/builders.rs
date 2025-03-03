@@ -136,7 +136,7 @@ impl InterfaceBuilder {
             dns: self.dns,
 
             #[cfg(feature = "amneziawg")]
-            amnezia_settings: None,
+            amnezia_settings: self.amnezia_settings,
 
             endpoint: self.endpoint,
             peers: self.peers,
