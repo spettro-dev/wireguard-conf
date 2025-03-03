@@ -3,7 +3,7 @@
 use wireguard_conf::prelude::*;
 
 #[test]
-fn random() {
+fn amnezia_random() {
     let amnezia_settings = AmneziaSettings::random();
 
     assert_eq!(amnezia_settings.validate(), Ok(()));
@@ -14,7 +14,7 @@ fn random() {
 }
 
 #[test]
-fn validation() {
+fn amnezia_validation() {
     let amnezia_settings = AmneziaSettings::random();
 
     {

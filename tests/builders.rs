@@ -2,7 +2,7 @@ use ipnet::Ipv4Net;
 use wireguard_conf::{as_ipnet, prelude::*};
 
 #[test]
-fn builders() {
+fn interface_builder() {
     let address = as_ipnet!("10.3.2.1/24");
 
     let interface = InterfaceBuilder::new()
@@ -23,4 +23,18 @@ fn builders() {
     assert_eq!(interface.listen_port, Some(55870));
     assert_eq!(interface.dns.len(), 3);
     assert_eq!(interface.peers.len(), 1);
+}
+
+#[test]
+fn peer_builder() {
+    let allowed_ip = as_ipnet!("10.3.2.1/32");
+    let endpoint = "peer.example.com".to_string();
+
+    let peer = PeerBuilder::new()
+        .set_allowed_ips(vec![allowed_ip])
+        .endpoint(endpoint.clone())
+        .build();
+
+    assert_eq!(peer.allowed_ips, vec![allowed_ip]);
+    assert_eq!(peer.endpoint, Some(endpoint));
 }
