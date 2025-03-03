@@ -36,6 +36,7 @@
 //! ```
 
 #![warn(clippy::pedantic)]
+#![allow(clippy::doc_markdown)]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
 mod macros;

@@ -52,7 +52,7 @@ impl fmt::Display for Interface {
         #[cfg(feature = "amneziawg")]
         if let Some(amnezia_settings) = &self.amnezia_settings {
             writeln!(f)?;
-            writeln!(f, "{}", amnezia_settings)?;
+            writeln!(f, "{amnezia_settings}")?;
         }
 
         for peer in &self.peers {

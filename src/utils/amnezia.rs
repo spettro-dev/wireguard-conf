@@ -16,6 +16,7 @@ macro_rules! assert_return {
 /// AmneziaWG obfuscation values.
 ///
 /// - [Documentation](https://github.com/amnezia-vpn/amneziawg-linux-kernel-module?tab=readme-ov-file#configuration)
+#[must_use]
 #[derive(Clone, Debug)]
 pub struct AmneziaSettings {
     /// 1 ≤ Jc ≤ 128; recommended range is from 3 to 10 inclusive
@@ -40,37 +41,8 @@ pub struct AmneziaSettings {
     pub h4: usize,
 }
 
-/// Initializers
+/// Methods
 impl AmneziaSettings {
-    /// Create new [`AmneziaSettings`], with value checking.
-    pub fn new(
-        jc: usize,
-        jmin: usize,
-        jmax: usize,
-        s1: usize,
-        s2: usize,
-        h1: usize,
-        h2: usize,
-        h3: usize,
-        h4: usize,
-    ) -> WireguardResult<Self> {
-        let amnezia_settings = Self {
-            jc,
-            jmin,
-            jmax,
-            s1,
-            s2,
-            h1,
-            h2,
-            h3,
-            h4,
-        };
-
-        amnezia_settings.validate()?;
-
-        Ok(amnezia_settings)
-    }
-
     /// Generate [`AmneziaSettings`] with randomized values, based of recommended ranges or values.
     ///
     /// # Examples
@@ -96,16 +68,16 @@ impl AmneziaSettings {
             let mut value = s1 + 56;
 
             while s1 + 56 == value {
-                value = rng.random_range(1..=150)
+                value = rng.random_range(1..=150);
             }
 
             value
         };
 
-        let h1 = rng.random_range(10..=2147483640);
-        let h2 = rng.random_range(10..=2147483640);
-        let h3 = rng.random_range(10..=2147483640);
-        let h4 = rng.random_range(10..=2147483640);
+        let h1 = rng.random_range(10..=2_147_483_640);
+        let h2 = rng.random_range(10..=2_147_483_640);
+        let h3 = rng.random_range(10..=2_147_483_640);
+        let h4 = rng.random_range(10..=2_147_483_640);
 
         Self {
             jc,
@@ -119,11 +91,13 @@ impl AmneziaSettings {
             h4,
         }
     }
-}
 
-/// Methods
-impl AmneziaSettings {
     /// Validates [`AmneziaSettings`].
+    ///
+    /// # Errors
+    ///
+    /// If [`AmneziaSettings`] is invalid, it will throw [`WireguardError::InvalidAmneziaSetting`]
+    /// with setting name
     pub fn validate(&self) -> WireguardResult<()> {
         assert_return!(
             1 <= self.jc && self.jc <= 128,

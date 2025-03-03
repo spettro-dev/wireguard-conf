@@ -1,5 +1,3 @@
-/// Collection of helper structs for creating [`Interface`]/[`Peer`]
-
 #[cfg(feature = "amneziawg")]
 mod amnezia;
 mod keys;
