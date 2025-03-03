@@ -3,6 +3,11 @@
 //! - Use [`InterfaceBuilder`] and [`PeerBuilder`] for interface/peers creation.
 //! - Use [`Interface`]'s and [`Peer`]'s [`std::fmt::Display`] for exporting  Wireguard config (`.to_string()`, [`write!()`], etc).
 //! - Use [`PrivateKey`] and [`PublicKey`] for generating, importing keys.
+//! - Use [`AmneziaSettings`] for generating/using AmneziaWG obfuscation values.
+//!
+//! # Features
+//!
+//! - `amneziawg`: Adds AmneziaWG obfuscation values support.
 //!
 //! # Example
 //!
@@ -31,13 +36,14 @@
 //! ```
 
 #![warn(clippy::pedantic)]
+#![allow(clippy::doc_markdown)]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 
+mod macros;
 mod models;
 mod utils;
-mod macros;
 
 pub mod prelude;
 
 pub use models::*;
 pub use utils::*;
-

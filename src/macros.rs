@@ -14,5 +14,5 @@
 macro_rules! as_ipnet {
     ($x:expr) => {
         $x.parse::<Ipv4Net>().unwrap()
-    }
+    };
 }

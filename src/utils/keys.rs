@@ -15,7 +15,8 @@ pub struct PrivateKey {
 }
 
 impl PrivateKey {
-    #[must_use] pub fn random() -> PrivateKey {
+    #[must_use]
+    pub fn random() -> PrivateKey {
         Self {
             secret: StaticSecret::random(),
         }
