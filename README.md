@@ -39,3 +39,7 @@ println!("{}\n", interface);
 println!("Client's config:");
 println!("{}", peer.to_interface(&interface).unwrap());
 ```
+
+### Features
+
+- `amneziawg`: adds support for generating/using [AmneziaWG](https://docs.amnezia.org/documentation/amnezia-wg/) obfuscation values.
