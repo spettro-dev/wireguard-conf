@@ -173,6 +173,8 @@ pub struct PeerBuilder {
     endpoint: Option<String>,
     allowed_ips: Vec<Ipv4Net>,
     key: Option<Either<PrivateKey, PublicKey>>,
+    preshared_key: Option<PresharedKey>,
+    persistent_keepalive: Option<u32>,
 
     #[cfg(feature = "amneziawg")]
     #[cfg_attr(docsrs, doc(cfg(feature = "amneziawg")))]
@@ -214,7 +216,7 @@ impl PeerBuilder {
     ///
     /// If you set private key (instead of public key), you can generate [`Interface`] from [`Peer`] (see [`Peer::as_interface()`]).
     ///
-    /// [Wireguard Docs](https://github.com/pirate/wireguard-docs?tab=readme-ov-file#publickey)
+    /// [Wireguard Docs](https://github.com/pirate/wireguard-docs?tab=readme-ov-file#privatekey)
     pub fn private_key(mut self, private_key: PrivateKey) -> PeerBuilder {
         self.key = Some(Either::Left(private_key));
         self
@@ -225,6 +227,22 @@ impl PeerBuilder {
     /// [Wireguard Docs](https://github.com/pirate/wireguard-docs?tab=readme-ov-file#publickey)
     pub fn public_key(mut self, public_key: PublicKey) -> PeerBuilder {
         self.key = Some(Either::Right(public_key));
+        self
+    }
+
+    /// Sets preshared key.
+    ///
+    /// [Wireguard Whitepaper - Section 5.2](https://www.wireguard.com/papers/wireguard.pdf)
+    pub fn preshared_key(mut self, preshared_key: PresharedKey) -> PeerBuilder {
+        self.preshared_key = Some(preshared_key);
+        self
+    }
+
+    /// Sets persistent keepalive.
+    ///
+    /// [Wireguard Docs]()
+    pub fn persistent_keepalive(mut self, persistent_keepalive: u32) -> PeerBuilder {
+        self.persistent_keepalive = Some(persistent_keepalive);
         self
     }
 
@@ -248,6 +266,8 @@ impl PeerBuilder {
             endpoint: self.endpoint,
             allowed_ips: self.allowed_ips,
             key,
+            preshared_key: self.preshared_key,
+            persistent_keepalive: self.persistent_keepalive,
 
             #[cfg(feature = "amneziawg")]
             amnezia_settings: self.amnezia_settings,

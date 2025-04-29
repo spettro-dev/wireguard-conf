@@ -17,6 +17,9 @@ pub enum WireguardError {
     #[error("invalid public key")]
     InvalidPublicKey,
 
+    #[error("invalid preshared key")]
+    InvalidPresharedKey,
+
     #[error("no private key provided")]
     NoPrivateKeyProvided,
 

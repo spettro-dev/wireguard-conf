@@ -20,6 +20,12 @@ pub struct Peer {
     /// Otherwise only to peer section of config.
     pub key: Either<PrivateKey, PublicKey>,
 
+    /// Peer's preshared key.
+    pub preshared_key: Option<PresharedKey>,
+
+    /// Peer's keep alive interval.
+    pub persistent_keepalive: Option<u32>,
+
     #[cfg(feature = "amneziawg")]
     #[cfg_attr(docsrs, doc(cfg(feature = "amneziawg")))]
     pub amnezia_settings: Option<AmneziaSettings>,
@@ -89,6 +95,12 @@ impl fmt::Display for Peer {
             "PublicKey = {}",
             self.key.clone().right_or_else(|key| PublicKey::from(&key))
         )?;
+        if let Some(preshared_key) = &self.preshared_key {
+            writeln!(f, "PresharedKey = {preshared_key}")?;
+        }
+        if let Some(persistent_keepalive) = self.persistent_keepalive {
+            writeln!(f, "PersistentKeepalive = {persistent_keepalive}")?;
+        }
 
         Ok(())
     }

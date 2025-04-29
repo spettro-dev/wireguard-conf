@@ -1,7 +1,9 @@
 use core::fmt;
 
 use base64::prelude::*;
+use rand::RngCore;
 use x25519_dalek::{PublicKey as XPublicKey, StaticSecret};
+use zeroize::{Zeroize, ZeroizeOnDrop};
 
 use crate::WireguardError;
 
@@ -103,5 +105,60 @@ impl From<&PrivateKey> for PublicKey {
         Self {
             key: XPublicKey::from(&value.secret),
         }
+    }
+}
+
+/// Preshared key.
+///
+/// A 32-byte symmetric key used for additional security.
+/// Wraps a simple [u8; 32] byte array.
+#[derive(Clone, PartialEq, Zeroize, ZeroizeOnDrop)]
+pub struct PresharedKey {
+    key: [u8; 32],
+}
+
+impl PresharedKey {
+    /// Generates a new cryptographically secure random preshared key.
+    #[must_use]
+    pub fn random() -> Self {
+        let mut key = [0u8; 32];
+
+        rand::rng().fill_bytes(&mut key);
+
+        Self { key }
+    }
+
+    /// Returns a reference to the raw bytes of the preshared key.
+    #[must_use]
+    pub fn as_bytes(&self) -> &[u8; 32] {
+        &self.key
+    }
+}
+
+impl fmt::Debug for PresharedKey {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("PresharedKey")
+            .field("key", &self.to_string())
+            .finish()
+    }
+}
+
+impl fmt::Display for PresharedKey {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", BASE64_STANDARD.encode(self.key))
+    }
+}
+
+impl TryFrom<String> for PresharedKey {
+    type Error = WireguardError;
+
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        let bytes: [u8; 32] = BASE64_STANDARD
+            .decode(value.trim())
+            .map_err(|_| WireguardError::InvalidPresharedKey)?
+            .try_into()
+            .map_err(|_| WireguardError::InvalidPresharedKey)?;
+
+        Ok(Self { key: bytes })
     }
 }
